@@ -1,4 +1,7 @@
+require 'rake'
 require 'jeweler'
+require 'rspec'
+require 'rspec/core/rake_task'
 
 Jeweler::Tasks.new do |gem|
   
@@ -13,3 +16,10 @@ Jeweler::Tasks.new do |gem|
   # gem.add_dependency "name"
   
 end
+
+desc "Run all specs"
+RSpec::Core::RakeTask.new('spec') do |t|
+  t.rspec_opts = ['--colour --format progress']
+end
+
+task :default => :spec
