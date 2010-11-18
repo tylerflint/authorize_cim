@@ -159,7 +159,11 @@ describe AuthorizeCim do
     	<validationDirectResponseList />
     </createCustomerProfileResponse>
 EOF
-    item = client.parse(xml)
+    item = client.parse(REXML::Document.new(xml)) 
+	
+	item[:code].should == 'I00001'
+	item[:customerProfileId].should == '2667736'
+	
 
   end
   

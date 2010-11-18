@@ -121,11 +121,7 @@ class AuthorizeCim
   def validate_customer_payment_profile()
     
   end
-  
-  def parse_return_file() 
-    
-  end
-  
+   
 # Create request head that is required for all requests.
 #
 # perams: 
@@ -151,14 +147,22 @@ class AuthorizeCim
 # return:
 #   hash containing all values from the xml doc
   def parse(xml)
+	code  				= REXML::XPath.first(xml.root, '/*/messages/code').text
+	profile_id			= REXML::XPath.first(xml.root, '/*/customerProfileId').text
+	trans_id			= REXML::XPath.first(xml.root, '/*/customerTransactionId').text
+	payment_profile_id 	= REXML::XPath.first(xml.root, '/*/customerPaymentProfileId').text
+	address_id	 		= REXML::XPath.first(xml.root, '/*/customerAddressId').text
+	direct_response 	= REXML::XPath.first(xml.root, '/*/directResponse').text
+	Hash.from_xml(xml)
+	
 
   end
   
   
   def send(xml) # returns xmlDoc of response
-    http = Net::HTTP.new($uri.host, $uri.port)
-    http.use_ssl = 443 == $uri.port
-    resp, body = http.post($uri.path, xml, {'Content-Type' => 'text/xml'})
+    http = Net::HTTP.new(@endpoint.host, @endpoint.port)
+    http.use_ssl = 443 == @endpoint.port
+    resp, body = http.post(@endpoint.path, xml, {'Content-Type' => 'text/xml'})
     REXML::Document.new(body)
   end
   
