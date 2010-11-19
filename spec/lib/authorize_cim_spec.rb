@@ -6,19 +6,19 @@ describe AuthorizeCim do
     @client = AuthorizeCim.new(:endpoint => :test, :login => '3wFY26cE', :key => '5W22d4Jk4De6v6XJ')
   end
   
-  it "should require key when itializing" do
-    
-  end
-  
-  it "should require a login when initializing" do
-    
-  end
   
   it "creates a valid customer profile" do
+    thing = { :merchant_id => 'guy', :description => 'o GOODNESS!', :email => 'lyon@delorum.com'}
+    item = @client.create_customer_profile(thing)
+    
+    item['createCustomerProfileResponse']['messages']['message']['code'].should == 'I00001'
     
   end
 
   it "should fail to create a valid customer profile when it recieves invalid input" do
+    thing = {:useless_stuff => 'HAY, Im not useless :_('}
+    item = @client.create_customer_profile(thing)
+    item['createCustomerProfileResponse']['messages']['message']['code'].should_not == 'I00001'
     
   end
   
@@ -159,10 +159,11 @@ describe AuthorizeCim do
     	<validationDirectResponseList />
     </createCustomerProfileResponse>
 EOF
-    item = client.parse(REXML::Document.new(xml)) 
+
+    item = @client.parse(xml) 
 	
-	item[:code].should == 'I00001'
-	item[:customerProfileId].should == '2667736'
+	item['createCustomerProfileResponse']['messages']['message']['code'].should == 'I00001'
+	item['createCustomerProfileResponse']['customerProfileId'].should == '2667736'
 	
 
   end
