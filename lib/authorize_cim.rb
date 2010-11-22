@@ -182,6 +182,7 @@ class AuthorizeCim
   end
   
   # Create a new payment transaction from an existing customer profile.
+  # can handle all transactions except Void transaction.
   #
   # perams:
   #     A hash containing all necessary fields
@@ -600,17 +601,16 @@ class AuthorizeCim
     parse send(data)
   end
   
-# # Update the status of a split tender group (a group of transactions, each of which pays for part of one order).
-#   def update_split_tender_group(input)
-#     data = build_request('updateSplitTenderGroupRequest') do |xml|
-# 
-#       DONT WANNA DO IT
-#     
-#     end    
-#     parse send(data)
-#   end
-  
-# Verify an existing customer payment profile by generating a test transaction.
+  # # Update the status of a split tender group (a group of transactions, each of which pays for part of one order).
+  #   def update_split_tender_group(input)
+  #     data = build_request('updateSplitTenderGroupRequest') do |xml|
+  # 
+  #       DONT WANNA DO IT
+  #     
+  #     end    
+  #     parse send(data)
+  #   end
+  # Verify an existing customer payment profile by generating a test transaction.
   def validate_customer_payment_profile(input)
   	data = build_request('validateCustomerPaymentProfileRequest') do |xml|
       xml.customerProfileId input[:customer_profile_id] if input[:customer_profile_id]
@@ -622,15 +622,15 @@ class AuthorizeCim
     parse send(data)
   end
    
-# Create request head that is required for all requests.
-#
-# perams: 
-#   request string
-#   block of code containing all the additional xml code
-#
-# return:
-#   completed xml as a string
-#
+  # Create request head that is required for all requests.
+  #
+  # perams: 
+  #   request string
+  #   block of code containing all the additional xml code
+  #
+  # return:
+  #   completed xml as a string
+  #
   def build_request(request, xml = Builder::XmlMarkup.new(:indent => 2))
     xml.instruct!
     xml.tag!(request, :xmlns => 'AnetApi/xml/v1/schema/AnetApiSchema.xsd') do
@@ -676,7 +676,7 @@ class AuthorizeCim
     http.use_ssl = 443 == @uri.port
     begin
       resp, body = http.post(@uri.path, xml, {'Content-Type' => 'text/xml'})
-    rescue   Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+    rescue   Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, Errno::ECONNREFUSED, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
       puts e.message      
     end
     body
