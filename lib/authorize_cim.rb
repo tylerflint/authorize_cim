@@ -610,6 +610,8 @@ class AuthorizeCim
   #     end    
   #     parse send(data)
   #   end
+  
+  
   # Verify an existing customer payment profile by generating a test transaction.
   def validate_customer_payment_profile(input)
   	data = build_request('validateCustomerPaymentProfileRequest') do |xml|
@@ -664,7 +666,7 @@ class AuthorizeCim
   #
   # prerams:
   #   response xml already parsed to hash  
-  # returns:
+  # returns: 
   #   string - response text (should be something like "Successful." or some long explaination why we it didnt work)
   def response_text(hash)
     hash[hash.keys[0]]['messages']['message']['text']
