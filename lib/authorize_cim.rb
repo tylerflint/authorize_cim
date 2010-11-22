@@ -29,7 +29,7 @@ class AuthorizeCim
   # Create a new customer profile
   #
   #
-  # perams:
+  # params:
   #   Necessary:
   #     :merchant_id => '<some id>'  (up to 20 characters)
   #    or
@@ -55,9 +55,9 @@ class AuthorizeCim
   # Create a new customer payment profile for an existing customer profile. 
   # You can create up to 10 payment profiles for each customer profile.
   # 
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :ref_id               => '<id>' (up to 20 digits (optional))
   #     :customer_profile_id  => <id of customer> (numeric (necessary))
   #     :payment_profile      => {
@@ -141,9 +141,9 @@ class AuthorizeCim
   # Create a new customer shipping address for an existing customer profile. 
   # You can create up to 100 customer shipping addresses for each customer profile.
   # 
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :ref_id               => '<id>' (up to 20 digits (optional))
   #     :customer_profile_id  => <id of customer> (numeric (necessary))
   #     :address => {  (a hash containing address information(necessary)
@@ -184,9 +184,9 @@ class AuthorizeCim
   # Create a new payment transaction from an existing customer profile.
   # can handle all transactions except Void transaction.
   #
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :ref_id      => '<id>' (up to 20 digits (optional))
   #     :transaction => { (REQUIRED)                                                          TODO \/ I dont know the rest...
   #     :trans_type => '<transType>' (must be profileTransAuthCapture, profileTransAuthOnly, profileTransPriorAuthCapture, profileTransCaptureOnly, profileTransRefund, profileTransVoid' (REQUIRED))
@@ -303,9 +303,9 @@ class AuthorizeCim
      
   # Void a transaction.
   # 
-  # perams:
+  # params:
   #     A hash containing all necessary fileds
-  #   all possible perams:
+  #   all possible params:
   #         :customer_profile_id          => <id number> (profile Identification number given by authorize.net (optional))
   #         :customer_payment_profile_id  => <payment id number> (profile payment ID given by authorize.net (optional))
   #         :customer_Shipping_address_id => <address id> (address ID given by authorize.net (optional))
@@ -329,9 +329,9 @@ class AuthorizeCim
 
   # Delete an existing customer profile along with all associated customer payment profiles and customer shipping addresses.
   # 
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :ref_id               => '<id>' (up to 20 digits (optional))
   #     :customer_profile_id  => <id of customer> (numeric (necessary))
   #
@@ -347,9 +347,9 @@ class AuthorizeCim
   
   # Delete a customer payment profile from an existing customer profile.
   # 
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :ref_id                       => '<id>' (up to 20 digits (optional))
   #     :customer_profile_id          => <id of customer> (numeric (necessary))
   #     :customer_payment_profile_id  => <payment id> (numeric (necessary))
@@ -366,9 +366,9 @@ class AuthorizeCim
     
   # Delete a customer shipping address from an existing customer profile.
   # 
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :ref_id                       => '<id>' (up to 20 digits (optional))
   #     :customer_profile_id          => <id of customer> (numeric (necessary))
   #     :customer_address_id  => <shipping id> (numeric (necessary))
@@ -394,9 +394,9 @@ class AuthorizeCim
   end
   
   # Retrieve an existing customer profile along with all the associated customer payment profiles and customer shipping addresses.
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :customer_profile_id          => <id of customer> (numeric (necessary))
   def get_customer_profile(input)
   	data = build_request('getCustomerProfileRequest') do |xml|
@@ -408,9 +408,9 @@ class AuthorizeCim
   
   # Retrieve a customer payment profile for an existing customer profile.
   # 
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :customer_profile_id          => <id of customer> (numeric (necessary))
   #     :customer_payment_profile_id  => <payment id> (numeric (necessary))
   #
@@ -426,9 +426,9 @@ class AuthorizeCim
   end
   
   # Retrieve a customer shipping address for an existing customer profile.
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :ref_id                       => '<id>' (up to 20 digits (optional))
   #     :customer_profile_id          => <id of customer> (numeric (necessary))
   #     :customer_address_id  => <shipping id> (numeric (necessary))
@@ -444,7 +444,7 @@ class AuthorizeCim
   end
   
   # Update an existing customer profile.
-  # perams:
+  # params:
   #   Necessary:
   #     :customer_profile_id => <id of customer> (numeric (necessary))
   #  {
@@ -472,9 +472,9 @@ class AuthorizeCim
   
   # Update a customer payment profile for an existing customer profile.
   # 
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :ref_id               => '<id>' (up to 20 digits (optional))
   #     :customer_profile_id  => <id of customer> (numeric (necessary))
   #     :payment_profile      => {
@@ -559,9 +559,9 @@ class AuthorizeCim
   
   # Update a shipping address for an existing customer profile.
   # 
-  # perams:
+  # params:
   #     A hash containing all necessary fields
-  #   all possible perams:
+  #   all possible params:
   #     :ref_id               => '<id>' (up to 20 digits (optional))
   #     :customer_profile_id  => <id of customer> (numeric (necessary))
   #     :address => {  (a hash containing address information(necessary)
@@ -624,7 +624,7 @@ class AuthorizeCim
    
   # Create request head that is required for all requests.
   #
-  # perams: 
+  # params: 
   #   request string
   #   block of code containing all the additional xml code
   #
