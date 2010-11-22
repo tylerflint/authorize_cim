@@ -643,18 +643,42 @@ class AuthorizeCim
     xml.target!
   end
   
-# parse all xml documents given back from the API
-# return:
-#   hash containing all values from the xml doc
+  # parse all xml documents given back from the API
+  # return:
+  #   hash containing all values from the xml doc
   def parse(xml)
     Crack::XML.parse(xml)
   end
   
+  # get the response code from any response.
+  #
+  # prerams:
+  #   response xml already parsed to hash  
+  # returns:
+  #   string - response code (something like "I00001" or "E00039")
+  def response_code(hash)
+    hash[hash.keys[0]]['messages']['message']['code']
+  end
+  
+  # get the response code from any response.
+  #
+  # prerams:
+  #   response xml already parsed to hash  
+  # returns:
+  #   string - response text (should be something like "Successful." or some long explaination why we it didnt work)
+  def response_text(hash)
+    hash[hash.keys[0]]['messages']['message']['text']
+  end
+
   
   def send(xml) # returns xmlDoc of response
     http = Net::HTTP.new(@uri.host, @uri.port)
     http.use_ssl = 443 == @uri.port
-    resp, body = http.post(@uri.path, xml, {'Content-Type' => 'text/xml'})
+    begin
+      resp, body = http.post(@uri.path, xml, {'Content-Type' => 'text/xml'})
+    rescue   Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+      puts e.message      
+    end
     body
   end
   

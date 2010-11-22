@@ -40,7 +40,6 @@ describe AuthorizeCim do
 
   end
   
-  
   it "creates a valid customer profile" do
     thing = { :merchant_id => 'guy', :description => 'o GOODNESS!', :email => 'lyon@delorum.com'}
     item = @client.create_customer_profile(thing)
@@ -56,7 +55,7 @@ describe AuthorizeCim do
   end
   
   it "create Customer payment profile with the minimum requirements" do
-    hash = {:customer_profile_id => '2681822', :validation_mode => 'none', :payment_profile => {}}
+    hash = {:customer_profile_id => @customer_profile, :validation_mode => 'none', :payment_profile => {}}
     hash[:payment_profile] = {:customer_type => 'business', :payment => {}}
     hash[:payment_profile][:payment] = {:credit_card => {}}
     hash[:payment_profile][:payment][:credit_card] = {:card_number => '1234567890123456', :expiration_date => '2011-03'}
@@ -65,7 +64,7 @@ describe AuthorizeCim do
   end
 
   it "create Customer payment profile with the maximum allowed fields" do
-    hash = {:ref_id => 'letters', :customer_profile_id => '2681822', :validation_mode => 'none', :payment_profile => {}}
+    hash = {:ref_id => 'letters', :customer_profile_id => @customer_profile, :validation_mode => 'none', :payment_profile => {}}
     hash[:payment_profile] = {:customer_type => 'business', :payment => {}, :bill_to => {}}
     hash[:payment_profile][:bill_to] = {:first_name => 'Lyon', :last_name => 'Hill', :company => 'Delorum', :address => '185 N 2000 E', :city => 'Rexburg', :state => 'ID', :zip => '83440', :country => 'USA', :phone_number => 2083591103, :fax_number => 2085895149}
     hash[:payment_profile][:payment] = {:credit_card => {}}
@@ -74,21 +73,14 @@ describe AuthorizeCim do
     pay_profile_return['createCustomerPaymentProfileResponse']['messages']['message']['code'].should == 'I00001'
   end
 
-  it "shoud fail to create a valid customer payment profile when it recieves invalid input" do
-    
-  end
-  
   it "create a valid customer shipping address" do
-    hash = {:customer_profile_id => '2681822', :address => {}}
+    hash = {:customer_profile_id => @customer_profile, :address => {}}
     hash[:address] = {:first_name => 'Tyler', :last_name => 'Flint', :company => 'Delorum', :address => '23 N 2nd E', :city => 'Rexburg', :state => 'ID', :zip => '83440', :country => 'USA', :phone_number => 2083598909, :fax_number => 2082315149}
     address_return = @client.create_customer_shipping_address(hash)
     address_return['createCustomerShippingAddressResponse']['messages']['message']['code'].should == 'I00001'
   end
   
-  it "should fail to create a valid customer shipping address when it recieves invalid input" do
-    
-  end
-  
+
   it "create a valid customer profile transaction" do
     hash = {:ref_id => '2', :transaction => {}, :trans_type => 'profileTransPriorAuthCapture'}
     hash[:transaction] = {:trans_type => 'profileTransAuthOnly', :transaction_type => {}}
@@ -97,11 +89,6 @@ describe AuthorizeCim do
     transaction = @client.create_customer_profile_transaction(hash)
     transaction['createCustomerProfileTransactionResponse']['messages']['message']['code'].should == 'I00001'
   end
-  
-  it "should fail to create a valid customer profile transaction when it recieves invalid input" do
-    
-  end
-  
   
   it "should get customer profile IDs" do
     all_customer_profile_ids = @client.get_customer_profile_ids
@@ -185,17 +172,35 @@ EOF
   end
   
   it "should delete a customer profile" do
+    hash = {:customer_profile_id => @customer_profile}
+    rtn = @client.delete_customer_profile(hash)
+    rtn['deleteCustomerProfileResponse']['messages']['message']['code'].should == 'I00001'
     
   end
   
   it "should delete a customer payment profile" do
+    hash = {:customer_profile_id => @customer_profile, :customer_payment_profile_id => @customer_payment_profile}
+    rtn = @client.delete_customer_profile(hash)
+    rtn['deleteCustomerProfileResponse']['messages']['message']['code'].should == 'I00001'
     
   end
   
   it "should delete a customer shipping address" do
+    hash = {:customer_profile_id => @customer_profile, :customer_address_id => @customer_address_profile}
+    rtn = @client.delete_customer_profile(hash)
+    rtn['deleteCustomerProfileResponse']['messages']['message']['code'].should == 'I00001'
     
   end
   
-
+  it "should get the response code from the hash" do
+    xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><createCustomerProfileResponse xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"><messages><resultCode>Ok</resultCode><message><code>I00001</code><text>Successful.</text></message></messages><customerProfileId>2688406</customerProfileId><customerPaymentProfileIdList /><customerShippingAddressIdList /><validationDirectResponseList /></createCustomerProfileResponse>"
+    hash = @client.parse(xml)
+    "I00001".should == @client.response_code(hash)
+  end
   
+  it "should get the plain text response from the hash" do
+    xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><createCustomerProfileResponse xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"AnetApi/xml/v1/schema/AnetApiSchema.xsd\"><messages><resultCode>Ok</resultCode><message><code>I00001</code><text>Successful.</text></message></messages><customerProfileId>2688406</customerProfileId><customerPaymentProfileIdList /><customerShippingAddressIdList /><validationDirectResponseList /></createCustomerProfileResponse>"
+    hash = @client.parse(xml)
+    "Successful.".should == @client.response_text(hash)
+  end
 end
