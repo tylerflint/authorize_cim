@@ -3,7 +3,7 @@ require "#{File.dirname(__FILE__)}/../base"
 describe AuthorizeCim do
   
   before do
-    @client = AuthorizeCim.new(:endpoint => :test, :login => '3wFY26cE', :key => '5W22d4Jk4De6v6XJ')
+    @client = AuthorizeCim.new(:endpoint => :test, :login => <must fill in login to test>, :key => <must fill in key to test>)
   end
   
   before :each do
