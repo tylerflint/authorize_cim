@@ -268,7 +268,7 @@ class AuthorizeCim
             xml.tag!('lineItems')  do
               arr = input[:transaction][:transaction_type][:line_item]
               arr.each { |item|
-                xml.idemId item[:item_id]
+                xml.itemId item[:item_id]
                 xml.name item[:name]
                 xml.description item[:description]
                 xml.quantity item[:quantity]
