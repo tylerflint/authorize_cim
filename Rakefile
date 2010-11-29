@@ -13,9 +13,6 @@ Jeweler::Tasks.new do |gem|
   gem.authors     = ["Tyler Flint", "Lyon Hill"]
   gem.files       = Dir["{lib}/**/*", "{spec}/**/*","[A-Z]*"]
   
-  gem.add_dependency "crack"
-  gem.add_dependency "builder"
-  
   Jeweler::GemcutterTasks.new
 end
 
