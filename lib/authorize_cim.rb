@@ -10,7 +10,6 @@ end
 class AuthorizeCim
   
   def initialize(attrs)
-    
     raise InvalidOrMissingCredentials unless attrs[:key] && attrs[:login]
     
     @key   = attrs[:key]
@@ -22,8 +21,6 @@ class AuthorizeCim
       else 'https://api.authorize.net/xml/v1/request.api'
     end
     @uri = URI.parse(@endpoint)
-    
-      
   end
 
   # Create a new customer profile
@@ -322,7 +319,7 @@ class AuthorizeCim
         end
       end
     end
-    
+    parse send(data)
   end
 
      
@@ -382,7 +379,6 @@ class AuthorizeCim
       xml.customerAddressId input[:customer_address_id] if input[:customer_address_id]
     end    
   	parse send(data)
-    
   end
   
   # Retrieve all customer profile IDs you have previously created.
@@ -403,7 +399,6 @@ class AuthorizeCim
       xml.customerProfileId input[:customer_profile_id] if input[:customer_profile_id]
     end
     parse send(data)
-  	
   end
   
   # Retrieve a customer payment profile for an existing customer profile.
@@ -422,7 +417,6 @@ class AuthorizeCim
       xml.customerPaymentProfileId input[:customer_payment_profile_id] if input[:customer_payment_profile_id]
     end    
     parse send(data)
-  	
   end
   
   # Retrieve a customer shipping address for an existing customer profile.

@@ -3,7 +3,7 @@ require "#{File.dirname(__FILE__)}/../base"
 describe AuthorizeCim do
   
   before do
-    @client = AuthorizeCim.new(:endpoint => :test, :login => <must fill in login to test>, :key => <must fill in key to test>)
+    @client = AuthorizeCim.new(:endpoint => :test, :login => '3wFY26cE', :key => '5W22d4Jk4De6v6XJ')
   end
   
   before :each do
@@ -82,8 +82,8 @@ describe AuthorizeCim do
   
 
   it "create a valid customer profile transaction" do
-    hash = {:ref_id => '2', :transaction => {}, :trans_type => 'profileTransPriorAuthCapture'}
-    hash[:transaction] = {:trans_type => 'profileTransAuthOnly', :transaction_type => {}}
+    hash = {:ref_id => '2', :transaction => {}}
+    hash[:transaction] = {:trans_type => 'profileTransAuthCapture', :transaction_type => {}}
     hash[:transaction][:transaction_type] = {:amount => '101.11', :customer_profile_id => @customer_profile , :customer_payment_profile_id => @customer_payment_profile, :tax => {}}
     hash[:transaction][:transaction_type][:tax] = {:amount => '23.21', :name => 'state taxes'}
     transaction = @client.create_customer_profile_transaction(hash)
