@@ -204,13 +204,15 @@ class AuthorizeCim
   #           :name         => '<name>' (name of tax ie federal, state etc.)
   #           :description  => '<description>' (up to 255 characters)
   #         }  
-  #         :line_items => [ (an array of items on transaction, each array item is a hash containign \/ (optional))
+  #         :line_items => [ (an array of items on transaction, each array item is a hash containig \/ (optional))
+  #           {
   #           :item_id => '<id>' (up to 31 characters)
   #           :name => '<name>' (up to 31 characters)
   #           :description => '<description>' (up to 255 characters)
   #           :quantity => <number> (up to 4 digits(and 2 decimal places... but how could you have .34 things you sold...))
   #           :unit_price => <number> (up to 4 digits(and 2 decimal places))
   #           :taxable => <boolean> (must be "true" or "false")
+  #           }
   #         ]
   #         :customer_profile_id          => <id number> (profile Identification number given by authorize.net (required))
   #         :customer_payment_profile_id  => <payment id number> (profile payment ID given by authorize.net (required))
@@ -265,12 +267,12 @@ class AuthorizeCim
             xml.tag!('lineItems')  do
               arr = input[:transaction][:transaction_type][:line_item]
               arr.each { |item|
-                xml.itemId item[:item_id]
-                xml.name item[:name]
-                xml.description item[:description]
-                xml.quantity item[:quantity]
-                xml.unitPrice item[:unit_price]
-                xml.taxable item[:taxable]
+                xml.itemId item[:item_id] if item[:item_id]
+                xml.name item[:name] if item[:name]
+                xml.description item[:description] if item[:description]
+                xml.quantity item[:quantity] if item[:quantity]
+                xml.unitPrice item[:unit_price] if item[:unit_price]
+                xml.taxable item[:taxable] if item[:taxable]
               }
             end
           end
@@ -670,6 +672,8 @@ class AuthorizeCim
   def send(xml) # returns xmlDoc of response
     http = Net::HTTP.new(@uri.host, @uri.port)
     http.use_ssl = 443 == @uri.port
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    
     begin
       resp, body = http.post(@uri.path, xml, {'Content-Type' => 'text/xml'})
     rescue   Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, Errno::ECONNREFUSED, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
